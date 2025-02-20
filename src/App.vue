@@ -3,15 +3,18 @@
   import HomeView from "./components/HomeView.vue"
   import SudokuBoard from "./components/SudokuBoard.vue"
   import LoginView from "./components/LoginView.vue"
+  import DailySudoku from "./components/DailySudoku.vue"
 
   export default {
     components: {
       HomeView,
       SudokuBoard,
       LoginView,
+      DailySudoku,
 
     }
-  };
+}
+
 </script>
 
 <template>
@@ -27,17 +30,46 @@
       <RouterLink to="/loginview">login</RouterLink>
     </li>
     <li>
-      <RouterLink to="/sudokuboard">Daily Challange</RouterLink>
+      <RouterLink to="/dailysudoku">Daily Challange</RouterLink>
     </li>
   </ul>
 </nav>
 
 <main>
-  <RouterView />
+  <RouterView/>
 </main>
 
 </template>
 
 <style>
-  
-</style>
+  nav{
+  display:flex;
+  flex-direction: row;
+  justify-content:space-evenly;
+  background-color: #ecdfed;
+  height: 4em;
+  margin-left: 0;
+  margin-right:0;
+}
+
+  ul{
+    display:flex;
+    flex-direction:row;
+    list-style:none;
+  }
+
+   li{
+    align-self:center;
+    margin-right: 3em;
+    margin-left: 3em;
+   }
+
+   li a{
+    text-decoration: none;
+   }
+
+   li a:hover{
+    color:#0F25B5;
+    font-size: 17px;
+   }
+</style>  

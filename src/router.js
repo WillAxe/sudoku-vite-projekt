@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from "vue-router"
 import HomeView from "./components/HomeView.vue"
 import SudokuBoard from "./components/SudokuBoard.vue"
 import LoginView from "./components/LoginView.vue"
+import DailySudoku from "./components/DailySudoku.vue"
 
 
 export default createRouter({
@@ -18,6 +19,10 @@ export default createRouter({
     {
       component: LoginView,
       path: "/loginview"
+    },
+    {
+      component: DailySudoku,
+      path: "/dailysudoku"
     }
   ]
 })

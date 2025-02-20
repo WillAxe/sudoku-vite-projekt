@@ -1,50 +1,42 @@
+<script setup>
+  import {ref} from "vue"
+  
+  const nameInput = ref(null)
+</script>
+
 <template>
   <section>
     <div class="heading">
-      <h2>Welcome</h2>  
+      <h2>Welcome {{ nameInput }}</h2>  
       <p>Sign in</p>
     </div>
     <form action="HomeView.vue">
       <div class="input">
         <div class="label">
-          <label for="email">Email</label>
+          <label for="username">Username</label>
           <p class="requirement">*</p>
         </div>
-        <input id="email" type="text" name="email" placeholder="name@example.com" required>
+        <input id="username" type="text" name="username" v-model="nameInput" required>
       </div>
       <div class="input">
         <div class="label">
-          <label for="password">Password</label>
+          <label for="password">Password</label>  
           <p class="requirement">*</p>
         </div>
-        <input id="password" type="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" placeholder="*****" required>
+        <input id="password" type="password" name="password" placeholder="*****" required>
       </div>
       <div class="btn input">
         <a href="#">Back to homepage</a>
-        <button id="btnSignIn">Sign In</button>  
+        <button @click="helloMessage" id="btnSignIn">Sign In</button>  
       </div>
     </form> 
   </section>
 </template>
 
 
-
 <style scoped>
-  *{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  text-decoration: none;
-}
-
-body{
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 section{
+  margin:50px auto;
   position: relative;
   width: 300px;
   height: 490px;
@@ -55,6 +47,7 @@ section{
   flex-direction: column;
   justify-content: space-between;
   overflow:hidden;
+  border:solid rgb(211, 59, 206);
 }
 
 section:after{
@@ -78,7 +71,7 @@ section:after{
 }
 
 form{
-  height: 270px;
+  height: 400px;
   display:flex;
   flex-direction:column;
   justify-content: space-evenly;
@@ -105,7 +98,7 @@ form{
 .input input{
   position: relative;
   height:40px;
-  margin:0.8rem 0;
+  margin:0,0;
   outline: none;
   border-radius: 4px;
   border: 3px solid #5d329f;

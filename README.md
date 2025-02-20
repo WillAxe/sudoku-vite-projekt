@@ -1,1 +1,1 @@
-# A Vue.js template for Vite
+A sudoku game with Vue Framework
