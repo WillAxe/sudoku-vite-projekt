@@ -1,55 +1,71 @@
 <script setup>
-  import { defineEmits } from 'vue';
-  import { defineProps } from 'vue';
+  import { defineEmits } from "vue"
+  import { defineProps } from "vue"
 
   const props = defineProps({
-    numberCount: Object
+    numberCount: Object,
   })
 
   const emit = defineEmits(["highlight-number", "write-number"])
-  
-  function highlightNumber(number){
+
+  function highlightNumber(number) {
     emit("highlight-number", number)
   }
 
-  function removeHighlight(){
+  function removeHighlight() {
     emit("highlight-number", null)
   }
 
-
-  function writeOutNumber(number){
+  function writeOutNumber(number) {
     emit("write-number", number)
   }
-
 </script>
 
 <template>
   <div>
-    <button v-for="n in 9" :key="n" @mouseover="highlightNumber(n)" @mouseleave="removeHighlight" @click="writeOutNumber(n)" :disabled="props.numberCount[n] >= 9">{{ n }}</button>
+    <button
+      v-for="n in 9"
+      :key="n"
+      @mouseover="highlightNumber(n)"
+      @mouseleave="removeHighlight"
+      @click="writeOutNumber(n)"
+      :disabled="props.numberCount[n] >= 9"
+    >
+      {{ n }}
+      <span class="number_counts">{{ 9 - (numberCount[n] || 0) }}</span>
+    </button>
   </div>
 </template>
 
 <style scoped>
-
-  div{
+  div {
     display: flex;
-    margin:auto;
-    justify-content:center;
+    margin: auto;
+    justify-content: center;
   }
 
-  button{
-    padding:1.35em;
+  button {
+    position: relative;
+    padding: 1.35em;
     margin: 0.1px 4px;
-    border:outset #c917ba 2px;
-    background-color: #f7e4f5;    
+    border: outset #c917ba 2px;
+    background-color: #f7e4f5;
   }
 
-  button:disabled{
+  button:disabled {
     background-color: #ffebcd;
   }
 
-  button:hover{
+  button:hover {
     background-color: #f7e4f5a1;
   }
 
+  .number_counts {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    font-size: 0.6em;
+    margin-left: 4px;
+    padding-bottom: 15px;
+  }
 </style>

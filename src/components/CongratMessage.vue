@@ -2,17 +2,23 @@
   import { defineProps } from 'vue'
   import { defineEmits } from 'vue'
 
-  const props = defineProps(["message", "show"])
+  const props = defineProps({
+    show: Boolean,
+    message :String
+  })
   const emit = defineEmits(["close"])
+  function closeCongrat(){
+    emit("close")
+  }
 
 </script>
 
 <template>
   <div v-if="show" class="panel-overlay">
-    <div class="panel-content">
+    <div class="panel-content" @click.stop>
       <h2>Congratulations</h2>
       <p>{{ message }}</p>
-      <button @click='emit("close")'>Ok</button>
+      <button @click="closeCongrat">Ok</button>
     </div>
   </div>
 </template>
