@@ -160,11 +160,11 @@
     @highlight-number="highlightCells"
     :numberCount="numberCount"
   />
-  <CongratMessage
+  <!-- <CongratMessage
     :message="'You have succesfully completed the sudoku!'"
     :show="(showPanel = true)"
     @close="closePanel"
-  />
+  /> -->
 </template>
 
 <style scoped>
@@ -175,11 +175,15 @@
   table {
     border-collapse: collapse;
     margin: 5px auto;
+    max-width: 100%;
+    width: fit-content;
   }
 
   td {
     width: 40px;
     height: 40px;
+    max-width: 10vw;
+    max-height: 10vw;
     text-align: center;
     font-size: 24px;
   }
@@ -223,6 +227,22 @@
     color: #ffffff;
   }
 
+  button {
+    color: #ffffff;
+    padding: 12px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  button:active {
+    transform: scale(0.95);
+  }
+
+  /* This is what makes the square shake when wrong */
+
   @keyframes shake {
     0% {
       transform: translateX(0);
@@ -241,17 +261,35 @@
     }
   }
 
-  button {
-    color: #ffffff;
-    padding: 12px 20px;
-    font-size: 18px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
+  /* media query for mobile screen and other small screens */
+  @media (max-width: 685px) {
+    table {
+      width: 25%;
+      margin: 0 auto;
+    }
 
-  button:active {
-    transform: scale(0.95);
+    td {
+      width: 10vw;
+      height: 10vw;
+      font-size: 4vw;
+    }
+
+    input {
+      width: 10vw;
+      height: 10vw;
+      font-size: 4vw;
+    }
+
+    button {
+      width: 100%;
+      font-size: 4vw;
+      padding: 10px;
+    }
+
+    h3 {
+      font-size: 5vw;
+      margin-top: 15px;
+      margin-bottom: 4px;
+    }
   }
 </style>

@@ -68,4 +68,15 @@
     margin-left: 4px;
     padding-bottom: 15px;
   }
+
+  @media (max-width: 685px) {
+    div {
+      margin: 13px;
+    }
+    button {
+      padding: 1.28em;
+      width: 9%;
+      text-align: center;
+    }
+  }
 </style>

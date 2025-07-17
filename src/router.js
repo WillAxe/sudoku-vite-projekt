@@ -1,28 +1,22 @@
 import { createRouter, createWebHashHistory } from "vue-router"
 import HomeView from "./components/HomeView.vue"
 import SudokuBoard from "./components/SudokuBoard.vue"
-import LoginView from "./components/LoginView.vue"
 import DailySudoku from "./components/DailySudoku.vue"
-
 
 export default createRouter({
   history: createWebHashHistory(),
-  routes:[
+  routes: [
     {
       component: HomeView,
-      path: "/"
+      path: "/",
     },
     {
       component: SudokuBoard,
-      path: "/sudokuboard"
-    },
-    {
-      component: LoginView,
-      path: "/loginview"
+      path: "/sudokuboard",
     },
     {
       component: DailySudoku,
-      path: "/dailysudoku"
-    }
-  ]
+      path: "/dailysudoku",
+    },
+  ],
 })
