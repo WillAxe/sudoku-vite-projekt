@@ -1,8 +1,14 @@
 #app {
   height: 100vh;
-
 }
 
-body{
+body {
   margin: 0;
+}
+
+@media (max-width: 480px) {
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
 }

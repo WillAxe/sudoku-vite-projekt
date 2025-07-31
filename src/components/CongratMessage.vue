@@ -1,16 +1,15 @@
 <script setup>
-  import { defineProps } from 'vue'
-  import { defineEmits } from 'vue'
+  import { defineProps } from "vue"
+  import { defineEmits } from "vue"
 
   const props = defineProps({
     show: Boolean,
-    message :String
+    message: String,
   })
   const emit = defineEmits(["close"])
-  function closeCongrat(){
+  function closeCongrat() {
     emit("close")
   }
-
 </script>
 
 <template>
@@ -25,28 +24,42 @@
 
 <style scoped>
   .panel-overlay {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: rgb(0, 0, 0);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    background: #f6f2f2e9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
 
-.panel-content {
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-}
+  .panel-content {
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    background-color: #fffafa;
+  }
 
-button {
-  background: #5d329f;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
+  button {
+    background: #5d329f;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
 
+  @media (max-width: 600px) {
+    .panel-content {
+      padding: 16px 6px;
+      min-width: 0;
+      max-width: 98vw;
+      font-size: 0.95rem;
+    }
+    button {
+      width: 100%;
+      font-size: 1rem;
+    }
+  }
 </style>

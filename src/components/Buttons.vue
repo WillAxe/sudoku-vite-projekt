@@ -79,4 +79,13 @@
       text-align: center;
     }
   }
+
+  @media (max-width: 370px) {
+    div {
+      width: 10vw;
+    }
+    button {
+      width: 6vw;
+    }
+  }
 </style>

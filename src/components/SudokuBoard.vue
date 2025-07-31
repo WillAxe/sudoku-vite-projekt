@@ -25,7 +25,7 @@
         row.map((cell) => (cell === 0 ? "" : cell))
       )
       solution.value = grid.solution.map((row) =>
-        row.map((cell) => (cell === 0 ? "" : cell))
+        row.map((cell) => Number(cell))
       )
 
       //Declare the empty cells to make them editable
@@ -61,12 +61,17 @@
   //Making it possbiblefor the user to fill in the empty cells with a number
   function printNumber(number) {
     if (activeCell.value.row !== null && activeCell.value.col !== null) {
-      userBoard.value[activeCell.value.row][activeCell.value.col] = number
+      userBoard.value[activeCell.value.row][activeCell.value.col] =
+        Number(number)
+      userBoard.value = [...userBoard.value] // force reactivity
     }
   }
 
   console.log(solution.value)
+  console.log(userBoard.value)
+  console.log(board.value)
 
+  //checks if the number is correct
   function checkSolution(row, col, value) {
     const num = value ? parseInt(value) : null
     userBoard.value[row][col] = isNaN(num) ? null : num
@@ -92,32 +97,45 @@
   //Checks if the board is complete and correct
   const isGameComplete = computed(() => {
     if (solution.value.length === 0) return false
-
-    return userBoard.value.every((row, rowCell) =>
+    const complete = userBoard.value.every((row, rowCell) =>
       row.every((cell, colCell) => {
-        const userInput = cell !== null && cell !== "" ? parseInt(cell) : null
-        return userInput === solution.value[rowCell][colCell]
+        if (board.value[rowCell][colCell] === "") {
+          const userInput = cell !== null && cell !== "" ? Number(cell) : null
+          const solutionValue = solution.value[rowCell][colCell]
+          console.log(
+            `Comapring user input ${userInput} with solution ${solutionValue}`
+          )
+          return userInput === solutionValue
+        }
+        return true
       })
     )
+    console.log("isGameComplete:", complete)
+    return complete
   })
 
   watch(
     isGameComplete,
     (newValue) => {
       if (newValue) {
-        console.log(isGameComplete.value)
-        showPanel = true
+        showPanel.value = true
+        console.log("hej")
       }
     },
     { deep: true }
   )
 
   function closePanel() {
-    showPanel = false
+    showPanel.value = false
   }
 </script>
 
 <template>
+  <CongratMessage
+    :message="'You have succesfully completed the sudoku!'"
+    :show="showPanel"
+    @close="closePanel"
+  />
   <div @click="removeHighlight">
     <!--Clicking outside to remove the highlight -->
     <h3>Difficulty: {{ difficulty }}</h3>
@@ -141,14 +159,27 @@
             }"
           >
             <!-- Check if the cell is an input field and making it editable even after input -->
-            <input
+            <!-- <input
               v-if="board[rowCell][colCell] === ''"
               type="button"
               v-model="userBoard[rowCell][colCell]"
               @click="onClick(rowCell, colCell)"
               @input="checkSolution(rowCell, colCell, $event.target.value)"
-            />
+            /> -->
+
+            <button
+              class="cell-button"
+              v-if="board[rowCell][colCell] === ''"
+              @click.stop="onClick(rowCell, colCell)"
+              :class="{
+                active:
+                  activeCell.row === rowCell && activeCell.col === colCell,
+              }"
+            >
+              {{ userBoard[rowCell][colCell] || "" }}
+            </button>
             <span v-else>{{ cell }}</span>
+            <!-- <span v-else>{{ cell }}</span> -->
           </td>
         </tr>
       </tbody>
@@ -160,11 +191,7 @@
     @highlight-number="highlightCells"
     :numberCount="numberCount"
   />
-  <!-- <CongratMessage
-    :message="'You have succesfully completed the sudoku!'"
-    :show="(showPanel = true)"
-    @close="closePanel"
-  /> -->
+  <p>Game complete: {{ isGameComplete }}</p>
 </template>
 
 <style scoped>
@@ -187,7 +214,7 @@
     text-align: center;
     font-size: 24px;
   }
-  input {
+  .cell-button {
     width: 50px;
     height: 50px;
     background-color: #fafafa;
@@ -209,11 +236,11 @@
     background-color: #f0f0ee;
   }
 
-  .highlight input {
+  .highlight .cell-button {
     background-color: #f0f0ee;
   }
 
-  input:focus {
+  .cell-button:focus {
     background-color: #f6f6dd;
   }
 
@@ -221,7 +248,7 @@
     background-color: #f6f6d0;
   }
 
-  .wrong input {
+  .wrong {
     background-color: #e72020;
     animation: shake 0.3s ease-in-out;
     color: #ffffff;

@@ -12,6 +12,7 @@
   onMounted(setTimer)
 
   function formatTime() {
+    // Format the time in MM:SS by converting minutes to seconds so that for every 60 seconds add 1 to the minutes column in the timer
     const minutes = Math.floor(seconds.value / 60)
     const sec = seconds.value % 60
     return `${String(minutes).padStart(2, "0")}:${String(sec).padStart(2, "0")}`
