@@ -69,5 +69,9 @@
     ul {
       padding-left: 0;
     }
+    li {
+      margin-left: 0.9em;
+      margin-right: 0.9em;
+    }
   }
 </style>

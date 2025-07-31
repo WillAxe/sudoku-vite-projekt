@@ -191,7 +191,7 @@
     @highlight-number="highlightCells"
     :numberCount="numberCount"
   />
-  <p>Game complete: {{ isGameComplete }}</p>
+  <!-- <p>Game complete: {{ isGameComplete }}</p> -->
 </template>
 
 <style scoped>
@@ -296,6 +296,12 @@
     }
 
     td {
+      width: 10vw;
+      height: 10vw;
+      font-size: 4vw;
+    }
+
+    .cell-button {
       width: 10vw;
       height: 10vw;
       font-size: 4vw;
