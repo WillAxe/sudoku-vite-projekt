@@ -65,6 +65,18 @@
     font-size: 17px;
   }
 
+  @media (prefers-color-scheme: dark) {
+    nav {
+      background-color: #ababab;
+    }
+    li a {
+      color: #161515;
+    }
+    li a:hover {
+      color: #210d9b;
+    }
+  }
+
   @media (max-width: 685px) {
     ul {
       padding-left: 0;

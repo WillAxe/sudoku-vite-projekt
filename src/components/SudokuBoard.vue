@@ -217,7 +217,7 @@
   .cell-button {
     width: 50px;
     height: 50px;
-    background-color: #fafafa;
+    background-color: #f9f9f9;
     border: none;
     font-size: 23px;
     font-weight: 100;
@@ -248,7 +248,7 @@
     background-color: #f6f6d0;
   }
 
-  .wrong {
+  .wrong .cell-button {
     background-color: #e72020;
     animation: shake 0.3s ease-in-out;
     color: #ffffff;
@@ -288,6 +288,43 @@
     }
   }
 
+  @media (prefers-color-scheme: dark) {
+    table {
+      border: solid 4px #f4f4f4;
+    }
+
+    .cell-button {
+      background-color: #1b1b1b;
+      color: #d352f3;
+    }
+    td {
+      background-color: #010101;
+      color: #fefefe;
+    }
+
+    td:nth-child(3n) {
+      border-right: 4px solid #f4f4f4;
+    }
+
+    tr:nth-child(3n) td {
+      border-bottom: 4px solid #f4f4f4;
+    }
+    .highlight {
+      background-color: #454545;
+    }
+    .highlight .cell-button {
+      background-color: #454545;
+    }
+    .cell-button:focus {
+      background-color: #9f9d9d;
+    }
+
+    .highlight-number {
+      background-color: #aeacac;
+      color: #010101;
+    }
+  }
+
   /* media query for mobile screen and other small screens */
   @media (max-width: 685px) {
     table {
@@ -323,6 +360,22 @@
       font-size: 5vw;
       margin-top: 15px;
       margin-bottom: 4px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    @media (prefers-color-scheme: dark) {
+      table {
+        border: none;
+      }
+
+      td:nth-child(3n) {
+        border-right: 2px solid #f4f4f4;
+      }
+
+      tr:nth-child(3n) td {
+        border-bottom: 2px solid #f4f4f4;
+      }
     }
   }
 </style>

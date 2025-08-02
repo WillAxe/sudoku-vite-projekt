@@ -6,6 +6,13 @@ body {
   margin: 0;
 }
 
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #010101;
+    color: #fefefe;
+  }
+}
+
 @media (max-width: 480px) {
   body {
     max-width: 100%;

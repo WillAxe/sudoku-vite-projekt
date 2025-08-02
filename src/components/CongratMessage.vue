@@ -39,11 +39,12 @@
     border-radius: 10px;
     text-align: center;
     background-color: #fffafa;
+    color: #0c0c0c;
   }
 
   button {
     background: #5d329f;
-    color: white;
+    color: #ffffff;
     border: none;
     padding: 10px;
     border-radius: 5px;

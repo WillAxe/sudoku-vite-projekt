@@ -40,8 +40,10 @@
 <style scoped>
   div {
     display: flex;
+    flex-wrap: nowrap;
     margin: auto;
     justify-content: center;
+    max-width: 100%;
   }
 
   button {
@@ -50,6 +52,8 @@
     margin: 0.1px 4px;
     border: outset #c917ba 2px;
     background-color: #f7e4f5;
+    flex: 0 0 auto;
+    white-space: nowrap;
   }
 
   button:disabled {
@@ -80,12 +84,21 @@
     }
   }
 
-  @media (max-width: 370px) {
+  @media (max-width: 400px) {
     div {
-      width: 10vw;
+      margin: 0;
+      width: 100%;
+      justify-content: center;
     }
     button {
-      width: 6vw;
+      padding: 1em;
+      width: 2%;
+      text-align: center;
+      margin: 1vw;
+    }
+
+    .number_counts {
+      padding: 0;
     }
   }
 </style>
