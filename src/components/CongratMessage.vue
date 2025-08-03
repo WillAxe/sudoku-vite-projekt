@@ -5,6 +5,7 @@
   const props = defineProps({
     show: Boolean,
     message: String,
+    finalTime: String,
   })
   const emit = defineEmits(["close"])
   function closeCongrat() {
@@ -17,6 +18,9 @@
     <div class="panel-content" @click.stop>
       <h2>Congratulations</h2>
       <p>{{ message }}</p>
+      <p v-if="finalTime">
+        Time: <strong>{{ finalTime }}</strong>
+      </p>
       <button @click="closeCongrat">Ok</button>
     </div>
   </div>

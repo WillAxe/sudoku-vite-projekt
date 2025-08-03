@@ -67,10 +67,6 @@
     }
   }
 
-  console.log(solution.value)
-  console.log(userBoard.value)
-  console.log(board.value)
-
   //checks if the number is correct
   function checkSolution(row, col, value) {
     const num = value ? parseInt(value) : null
@@ -114,12 +110,18 @@
     return complete
   })
 
+  const timerRef = ref(null)
+  const finalTime = ref("")
+
   watch(
     isGameComplete,
     (newValue) => {
       if (newValue) {
+        if (timerRef.value) {
+          timerRef.value.stopTimer()
+          finalTime.value = timerRef.value.formatTime()
+        }
         showPanel.value = true
-        console.log("hej")
       }
     },
     { deep: true }
@@ -134,12 +136,13 @@
   <CongratMessage
     :message="'You have succesfully completed the sudoku!'"
     :show="showPanel"
+    :finalTime="finalTime"
     @close="closePanel"
   />
   <div @click="removeHighlight">
     <!--Clicking outside to remove the highlight -->
     <h3>Difficulty: {{ difficulty }}</h3>
-    <TimerClock />
+    <TimerClock ref="timerRef" />
     <table border="1px" @click.stop>
       <tbody>
         <tr v-for="(row, rowCell) in board" :key="rowCell">
@@ -158,15 +161,6 @@
                 userBoard[rowCell][colCell] !== solution[rowCell][colCell],
             }"
           >
-            <!-- Check if the cell is an input field and making it editable even after input -->
-            <!-- <input
-              v-if="board[rowCell][colCell] === ''"
-              type="button"
-              v-model="userBoard[rowCell][colCell]"
-              @click="onClick(rowCell, colCell)"
-              @input="checkSolution(rowCell, colCell, $event.target.value)"
-            /> -->
-
             <button
               class="cell-button"
               v-if="board[rowCell][colCell] === ''"
@@ -179,7 +173,6 @@
               {{ userBoard[rowCell][colCell] || "" }}
             </button>
             <span v-else>{{ cell }}</span>
-            <!-- <span v-else>{{ cell }}</span> -->
           </td>
         </tr>
       </tbody>
@@ -322,6 +315,12 @@
     .highlight-number {
       background-color: #aeacac;
       color: #010101;
+    }
+
+    .wrong .cell-button {
+      background-color: #c70909;
+      animation: shake 0.3s ease-in-out;
+      color: #fcfbfb;
     }
   }
 
