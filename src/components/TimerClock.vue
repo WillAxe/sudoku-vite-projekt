@@ -1,10 +1,11 @@
-<script setup>
+<script setup lang="ts">
   import { ref } from "vue"
   import { onMounted } from "vue"
   import { defineEmits } from "vue"
+  import { defineExpose } from "vue"
 
   const seconds = ref(0)
-  let intervalId = null
+  let intervalId: number
 
   const emit = defineEmits(["stopped-timer"])
 
@@ -15,18 +16,18 @@
   }
   onMounted(setTimer)
 
-  function stopTimer() {
+  function stopTimer(): void {
     if (intervalId) {
       clearInterval(intervalId)
-      intervalId = null
+      intervalId = 0
       emit("stopped-timer", formatTime())
     }
   }
 
-  function formatTime() {
+  function formatTime(): string {
     // Format the time in MM:SS by converting minutes to seconds so that for every 60 seconds add 1 to the minutes column in the timer
-    const minutes = Math.floor(seconds.value / 60)
-    const sec = seconds.value % 60
+    const minutes: number = Math.floor(seconds.value / 60)
+    const sec: number = seconds.value % 60
     return `${String(minutes).padStart(2, "0")}:${String(sec).padStart(2, "0")}`
   }
 

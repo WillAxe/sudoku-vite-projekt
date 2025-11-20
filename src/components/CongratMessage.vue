@@ -1,11 +1,11 @@
-<script setup>
+<script setup lang="ts">
   import { defineProps } from "vue"
   import { defineEmits } from "vue"
 
   const props = defineProps({
     show: Boolean,
     message: String,
-    finalTime: String,
+    finalTime: String
   })
   const emit = defineEmits(["close"])
   function closeCongrat() {

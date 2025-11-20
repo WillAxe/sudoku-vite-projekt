@@ -1,14 +1,21 @@
-<script setup>
-  import { defineEmits } from "vue"
-  import { defineProps } from "vue"
+<script setup lang="ts">
+  import { defineEmits, defineProps } from "vue"
 
-  const props = defineProps({
-    numberCount: Object,
-  })
+  // allow numeric indexing like props.numberCount[1]
+  interface NumberCount {
+    [key: number]: number
+  }
 
-  const emit = defineEmits(["highlight-number", "write-number"])
+  const props = defineProps<{
+    numberCount: NumberCount
+  }>()
 
-  function highlightNumber(number) {
+  const emit = defineEmits<{
+    (e: "highlight-number", value: number | null): void
+    (e: "write-number", value: number): void
+  }>()
+
+  function highlightNumber(number: number) {
     emit("highlight-number", number)
   }
 
@@ -16,11 +23,10 @@
     emit("highlight-number", null)
   }
 
-  function writeOutNumber(number) {
+  function writeOutNumber(number: number) {
     emit("write-number", number)
   }
 </script>
-
 <template>
   <div>
     <button
@@ -29,9 +35,10 @@
       @mouseover="highlightNumber(n)"
       @mouseleave="removeHighlight"
       @click="writeOutNumber(n)"
-      :disabled="props.numberCount[n] >= 9"
+      :disabled="props.numberCount[n]! >= 9"
     >
       {{ n }}
+      <span class="number_counts">{{ 9 - (props.numberCount[n] || 0) }}</span>
       <span class="number_counts">{{ 9 - (numberCount[n] || 0) }}</span>
     </button>
   </div>

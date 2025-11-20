@@ -1,10 +1,22 @@
-<script setup>
+<script setup lang="ts">
   import Buttons from "./Buttons.vue"
   import TimerClock from "./TimerClock.vue"
   import CongratMessage from "./CongratMessage.vue"
   import { ref } from "vue"
+  import type { Ref } from "vue"
   import { computed } from "vue"
   import { watch } from "vue"
+
+  interface Grid {
+    difficulty: string
+    value: (number | string)[][]
+    solution: number[][]
+  }
+
+  interface ActiveCell {
+    col: string | number
+    row: string | number
+  }
 
   fetch(
     "https://sudoku-api.vercel.app/api/dosuku?query{newboard(limit:1){grids{value}}}"
@@ -12,11 +24,12 @@
     .then((response) => response.json())
     .then((result) => {
       console.log(result)
-      const grid = result.newboard.grids[0]
+      const grid: Grid = result.newboard.grids[0]
+      console.log(grid)
       for (let i = 0; i < grid.value.length; i++) {
-        for (let n = 0; n < grid.value[i].length; n++) {
-          if (grid.value[i][n] === 0) {
-            grid.value[i][n] = ""
+        for (let n = 0; n < grid.value[i]!.length; n++) {
+          if (grid.value[i]![n] === 0) {
+            grid.value[i]![n] = ""
           }
         }
       }
@@ -29,60 +42,83 @@
       )
 
       //Declare the empty cells to make them editable
-      userBoard.value = board.value.map((row) =>
-        row.map((cell) => (cell === 0 ? "" : null))
+      userBoard.value = board.value.map((row: (string | number)[]) =>
+        row.map((cell) => (cell === 0 ? "" : ""))
       )
     })
 
-  const board = ref([])
-  const userBoard = ref([])
-  const difficulty = ref(null)
-  const solution = ref([])
+  const board = ref<(string | number)[][]>([])
+  const userBoard = ref<(number | string)[][]>([])
+  const difficulty = ref<string>("")
+  const solution = ref<number[][]>([])
 
-  const highlightedNumber = ref(null)
-  const activeCell = ref({ row: null, col: null })
+  const highlightedNumber = ref<number | undefined>()
+  //set the interface for the constant
+  const activeCell = ref<ActiveCell>({ row: "", col: "" })
 
   //Highlight the cell that the player press and highlight the column and row for that cell
-  function onClick(row, col) {
-    if (board.value[row][col] === "") {
+  function onClick(row: string | number, col: string | number) {
+    if (board.value[row as number]?.[col as number] === "") {
       activeCell.value = { row, col }
     }
   }
 
   function removeHighlight() {
-    activeCell.value = { row: null, col: null }
+    activeCell.value = { row: "", col: "" }
   }
 
   //The buttons highlights the corresponding numbers
 
-  function highlightCells(number) {
+  function highlightCells(number: number) {
     highlightedNumber.value = number
   }
   //Making it possbiblefor the user to fill in the empty cells with a number
-  function printNumber(number) {
+  function printNumber(number: number) {
     if (activeCell.value.row !== null && activeCell.value.col !== null) {
-      userBoard.value[activeCell.value.row][activeCell.value.col] =
-        Number(number)
-      userBoard.value = [...userBoard.value] // force reactivity
+      const row = userBoard.value[activeCell.value.row as number]
+      if (row) {
+        row[activeCell.value.col as number] = Number(number)
+        userBoard.value = [...userBoard.value] // force reactivity
+      }
     }
   }
 
   //checks if the number is correct
-  function checkSolution(row, col, value) {
-    const num = value ? parseInt(value) : null
-    userBoard.value[row][col] = isNaN(num) ? null : num
+  function checkSolution(row: number, col: number, value: string | number) {
+    const num = value ? parseInt(value.toString()) : ""
+    if (userBoard.value[row]) {
+      userBoard.value[row][col] = isNaN(num || NaN) ? "" : num
+    }
   }
 
   // count how many of each number there is in the grid
   const numberCount = computed(() => {
-    const count = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 }
+    const count: Record<string | number, number> = {
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 0,
+      7: 0,
+      8: 0,
+      9: 0
+    }
 
-    board.value.flat().forEach((num) => {
-      if (num && !isNaN(num)) count[num]++
+    board.value.flat().forEach((num: string | number) => {
+      const n = Number(num)
+      if (n && !isNaN(n) && n >= 1 && n <= 9) {
+        ;(count as any)[n]++
+      }
     })
 
-    userBoard.value.flat().forEach((num) => {
-      if (num && !isNaN(num)) count[num]++
+    userBoard.value.flat().forEach((num: number | string) => {
+      if (num !== null && num !== "") {
+        const n = Number(num)
+        if (!isNaN(n) && n >= 1 && n <= 9) {
+          ;(count as any)[n]++
+        }
+      }
     })
     return count
   })
@@ -91,27 +127,31 @@
   const showPanel = ref(false)
 
   //Checks if the board is complete and correct
-  const isGameComplete = computed(() => {
+  const isGameComplete = computed<boolean>(() => {
     if (solution.value.length === 0) return false
-    const complete = userBoard.value.every((row, rowCell) =>
-      row.every((cell, colCell) => {
-        if (board.value[rowCell][colCell] === "") {
-          const userInput = cell !== null && cell !== "" ? Number(cell) : null
-          const solutionValue = solution.value[rowCell][colCell]
-          console.log(
-            `Comapring user input ${userInput} with solution ${solutionValue}`
-          )
-          return userInput === solutionValue
-        }
-        return true
-      })
+    const complete = userBoard.value.every(
+      (row: (number | string)[], rowCell: number) =>
+        row.every((cell: number | string, colCell: number) => {
+          if (board.value[rowCell] && board.value[rowCell][colCell] === "") {
+            const userInput = cell !== null && cell !== "" ? Number(cell) : ""
+            const solutionValue = solution.value[rowCell]
+              ? solution.value[rowCell][colCell]
+              : ""
+            console.log(
+              `Comapring user input ${userInput} with solution ${solutionValue}`
+            )
+            return userInput === solutionValue
+          }
+          return true
+        })
     )
     console.log("isGameComplete:", complete)
     return complete
   })
 
-  const timerRef = ref(null)
-  const finalTime = ref("")
+  // consts for time functionality
+  const timerRef = ref<any>("")
+  const finalTime = ref<string>("")
 
   watch(
     isGameComplete,
@@ -120,6 +160,7 @@
         if (timerRef.value) {
           timerRef.value.stopTimer()
           finalTime.value = timerRef.value.formatTime()
+          localStorage.setItem("lastTime", finalTime.value)
         }
         showPanel.value = true
       }
@@ -147,7 +188,7 @@
       <tbody>
         <tr v-for="(row, rowCell) in board" :key="rowCell">
           <td
-            v-for="(cell, colCell) in row"
+            v-for="(cell, colCell) in (row as (string | number)[])"
             :key="colCell"
             align="center"
             @click="onClick(rowCell, colCell)"
@@ -156,21 +197,19 @@
                 rowCell === activeCell.row || colCell === activeCell.col,
               'highlight-number': cell === highlightedNumber,
               wrong:
-                userBoard[rowCell][colCell] !== null &&
-                userBoard[rowCell][colCell] !== '' &&
-                userBoard[rowCell][colCell] !== solution[rowCell][colCell],
+                userBoard[rowCell as number]?.[colCell as number] !== '' &&
+                userBoard[rowCell as number]?.[colCell as number] !== solution[rowCell as number]?.[colCell as number]
             }"
           >
             <button
               class="cell-button"
-              v-if="board[rowCell][colCell] === ''"
+              v-if="cell === ''"
               @click.stop="onClick(rowCell, colCell)"
               :class="{
-                active:
-                  activeCell.row === rowCell && activeCell.col === colCell,
+                active: activeCell.row === rowCell && activeCell.col === colCell
               }"
             >
-              {{ userBoard[rowCell][colCell] || "" }}
+              {{ userBoard[rowCell as number]?.[colCell as number] || "" }}
             </button>
             <span v-else>{{ cell }}</span>
           </td>
@@ -184,7 +223,6 @@
     @highlight-number="highlightCells"
     :numberCount="numberCount"
   />
-  <!-- <p>Game complete: {{ isGameComplete }}</p> -->
 </template>
 
 <style scoped>
@@ -210,11 +248,11 @@
   .cell-button {
     width: 50px;
     height: 50px;
-    background-color: #f9f9f9;
+    background-color: #fcfcfc;
     border: none;
     font-size: 23px;
     font-weight: 100;
-    color: #b407df;
+    color: #8c02ae;
   }
 
   td:nth-child(3n) {
@@ -281,46 +319,48 @@
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    table {
-      border: solid 4px #f4f4f4;
-    }
+  @media (max-width: 560px) {
+    @media (prefers-color-scheme: dark) {
+      table {
+        border: solid 4px #f4f4f4;
+      }
 
-    .cell-button {
-      background-color: #1b1b1b;
-      color: #d352f3;
-    }
-    td {
-      background-color: #010101;
-      color: #fefefe;
-    }
+      .cell-button {
+        background-color: #1b1b1b;
+        color: #d352f3;
+      }
+      td {
+        background-color: #010101;
+        color: #fefefe;
+      }
 
-    td:nth-child(3n) {
-      border-right: 4px solid #f4f4f4;
-    }
+      td:nth-child(3n) {
+        border-right: 4px solid #f4f4f4;
+      }
 
-    tr:nth-child(3n) td {
-      border-bottom: 4px solid #f4f4f4;
-    }
-    .highlight {
-      background-color: #454545;
-    }
-    .highlight .cell-button {
-      background-color: #454545;
-    }
-    .cell-button:focus {
-      background-color: #9f9d9d;
-    }
+      tr:nth-child(3n) td {
+        border-bottom: 4px solid #f4f4f4;
+      }
+      .highlight {
+        background-color: #454545;
+      }
+      .highlight .cell-button {
+        background-color: #454545;
+      }
+      .cell-button:focus {
+        background-color: #9f9d9d;
+      }
 
-    .highlight-number {
-      background-color: #aeacac;
-      color: #010101;
-    }
+      .highlight-number {
+        background-color: #aeacac;
+        color: #010101;
+      }
 
-    .wrong .cell-button {
-      background-color: #c70909;
-      animation: shake 0.3s ease-in-out;
-      color: #fcfbfb;
+      .wrong .cell-button {
+        background-color: #c70909;
+        animation: shake 0.3s ease-in-out;
+        color: #fcfbfb;
+      }
     }
   }
 

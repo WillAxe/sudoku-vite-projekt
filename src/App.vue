@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { RouterLink, RouterView } from "vue-router"
   import HomeView from "./components/HomeView.vue"
   import SudokuBoard from "./components/SudokuBoard.vue"
@@ -8,8 +8,8 @@
     components: {
       HomeView,
       SudokuBoard,
-      DailySudoku,
-    },
+      DailySudoku
+    }
   }
 </script>
 
