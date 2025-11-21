@@ -2,10 +2,9 @@
   import Buttons from "./Buttons.vue"
   import TimerClock from "./TimerClock.vue"
   import CongratMessage from "./CongratMessage.vue"
-  import { ref } from "vue"
+  import { ref, watch } from "vue"
   import type { Ref } from "vue"
   import { computed } from "vue"
-  import { watch } from "vue"
 
   interface Grid {
     difficulty: string
@@ -18,6 +17,11 @@
     row: string | number
   }
 
+  const board = ref<(string | number)[][]>([])
+  const userBoard = ref<(number | string)[][]>([])
+  const difficulty = ref<string>("")
+  const solution = ref<number[][]>([])
+
   fetch(
     "https://sudoku-api.vercel.app/api/dosuku?query{newboard(limit:1){grids{value}}}"
   )
@@ -26,8 +30,8 @@
       console.log(result)
       const grid: Grid = result.newboard.grids[0]
       console.log(grid)
-      for (let i = 0; i < grid.value.length; i++) {
-        for (let n = 0; n < grid.value[i]!.length; n++) {
+      for (let i: number = 0; i < grid.value.length; i++) {
+        for (let n: number = 0; n < grid.value[i]!.length; n++) {
           if (grid.value[i]![n] === 0) {
             grid.value[i]![n] = ""
           }
@@ -47,11 +51,6 @@
       )
     })
 
-  const board = ref<(string | number)[][]>([])
-  const userBoard = ref<(number | string)[][]>([])
-  const difficulty = ref<string>("")
-  const solution = ref<number[][]>([])
-
   const highlightedNumber = ref<number | undefined>()
   //set the interface for the constant
   const activeCell = ref<ActiveCell>({ row: "", col: "" })
@@ -69,8 +68,8 @@
 
   //The buttons highlights the corresponding numbers
 
-  function highlightCells(number: number) {
-    highlightedNumber.value = number
+  function highlightCells(number: number | null) {
+    highlightedNumber.value = number as number
   }
   //Making it possbiblefor the user to fill in the empty cells with a number
   function printNumber(number: number) {
@@ -124,7 +123,7 @@
   })
 
   //Hide the panel that popup when you complete the game
-  const showPanel = ref(false)
+  const showPanel = ref<boolean>(false)
 
   //Checks if the board is complete and correct
   const isGameComplete = computed<boolean>(() => {

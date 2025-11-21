@@ -64,16 +64,17 @@
     color: #0f25b5;
     font-size: 17px;
   }
-
-  @media (prefers-color-scheme: dark) {
-    nav {
-      background-color: #ababab;
-    }
-    li a {
-      color: #161515;
-    }
-    li a:hover {
-      color: #210d9b;
+  @media (max-width: 560px) {
+    @media (prefers-color-scheme: dark) {
+      nav {
+        background-color: #ababab;
+      }
+      li a {
+        color: #161515;
+      }
+      li a:hover {
+        color: #210d9b;
+      }
     }
   }
 
